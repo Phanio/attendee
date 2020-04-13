@@ -1,66 +1,42 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const uuid = require("uuid");
-var cors = require("cors");
+const express = require('express');
+const bodyParser = require('body-parser');
+const config = require('./server.config');
+var cors = require('cors');
+const session = require('express-session');
+const PostgresStore = require('./utils/PostgresStore');
+
 const app = express();
 app.use(cors());
+app.use(session({ secret: config.SESSION_SECRET }));
 app.use(bodyParser(bodyParser.json()));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+PostgresStore.init();
 
-let attendees = [
-  {
-    id: 1,
-    fullName: "First Person",
-    age: 25
-  },
-  {
-    id: 2,
-    fullName: "Second Person",
-    age: 54
-  },
-  {
-    id: 3,
-    fullName: "Third Person",
-    age: 20
-  },
-  {
-    id: 4,
-    fullName: "Fourth Person",
-    age: 67
+const postLogin = require('./controllers/post.login');
+const postSigin = require('./controllers/post.sigin');
+const AttendeeController = require('./controllers/AttendeeController');
+
+async function isAuthenticated (req, res, next) {
+  if (req.session.userId) {
+    next(); // appeler next() appelle la prochaine fonction dans la liste des middlewares
+    return;
   }
-];
+  res.status(401).send('unauthorized(1)');
+}
 
-app.get("/attendees", function(req, res) {
-  res.send(attendees);
+app.post('/login', (req, res) => {
+  postLogin(req, res);
+});
+app.post('/sigin', (req, res) => {
+  postSigin(req, res);
 });
 
-app.post("/attendees", (req, res) => {
-  const person = {
-    id: uuid.v4(),
-    ...req.body
-  };
-  attendees.push(person);
-  res.status(200);
-  res.send(person);
-});
+app.post('/attendees', isAuthenticated, AttendeeController.postAttendee);
+app.get('/attendees', isAuthenticated, AttendeeController.getAttendees);
 
-app.put("/attendees/:id", (req, res) => {
-  const person = req.body;
-  const personId = parseInt(req.params.id);
-  attendees = attendees.map(attendee => {
-    if (attendee.id === personId) {
-      return { id: personId, ...person };
-    }
-    return attendee;
-  });
-  res.sendStatus(200);
-});
+app.put('/attendees/:id', isAuthenticated, AttendeeController.updateAttendee);
 
-app.delete("/attendees/:id", (req, res) => {
-  const personId = parseInt(req.params.id);
-  attendees = attendees.filter(attendee => {
-    return attendee.id !== personId;
-  });
-  res.sendStatus(200);
-});
+app.delete('/attendees/:id', isAuthenticated, AttendeeController.deleteAttendee);
 
 app.listen(3001);
