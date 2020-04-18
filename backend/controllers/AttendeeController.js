@@ -5,9 +5,17 @@ class AttendeeController {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-  static async postAttendee (req, res) {
+  static async createAttendee (req, res) {
   // créer l'objet module et l'envoyer
-    res.json(await Attendee.create(req.body));
+    const userId = req.session.userId;
+    console.log(req.body);
+    console.log('user ==', userId);
+    const result = await Attendee.create(req.body, userId);
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(401).json({ msg: 'Error' });
+    }
   }
 
   /**
@@ -18,7 +26,7 @@ class AttendeeController {
     const userId = req.session.userId;
     const result = await Attendee.getByUserId(userId);
     console.log(result);
-    res.send(result);
+    res.json(result);
   }
 
   /**
@@ -26,12 +34,15 @@ class AttendeeController {
  * @param {import('express').Response} res
  */
   static async deleteAttendee (req, res) {
-    const result = await Attendee.remove(req.param.id, req.session.userId);
+    const userId = req.session.userId;
+    console.log(req.params);
+    const result = await Attendee.remove(req.params.id, userId);
+    console.log('del==', result);
     if (result) {
-      res.sendStatus(200);
+      res.status(200).json({ msg: 'Fields deleted!' });
       return;
     }
-    res.sendStatus();
+    res.status(401).json({ msg: 'Error' });
   }
 
   /**
@@ -39,7 +50,14 @@ class AttendeeController {
  * @param {import('express').Response} res
  */
   static async updateAttendee (req, res) {
-    res.json(await Attendee.update(req.body, req.session.userId));
+    const userId = req.session.userId;
+    const result = await Attendee.update(req.params.id, req.body, userId);
+    console.log('up == ', result);
+    if (result) {
+      res.status(200).json({ msg: 'Fields updated!' });
+      return;
+    }
+    res.sendStatus(401).json({ msg: 'Error occur' });
   }
 }
 module.exports = AttendeeController;

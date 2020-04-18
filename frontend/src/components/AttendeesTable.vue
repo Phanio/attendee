@@ -4,14 +4,14 @@
     <table>
       <thead>
         <tr>
-          <th>FullName</th>
+          <th>fullname</th>
           <th>Age</th>
           <th colspan="2">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="attendee in attendees" v-bind:key="attendee.id">
-          <td>{{ attendee.fullName }}</td>
+          <td>{{ attendee.fullname }}</td>
           <td>{{ attendee.age }}</td>
           <td class="editLabel" v-on:click="editAttendee(attendee)">EDIT</td>
           <td class="deleteLabel" v-on:click="deleteAttendee(attendee.id)">DELETE</td>

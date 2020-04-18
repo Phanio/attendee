@@ -81,19 +81,14 @@ export default {
         })
           .then((resp) => {
             if (resp.status === 200) {
-              resp.json().then((msg) => {
                 this.errors = [];
-                this.errors['success'] = msg;
+                this.errors['success'] = resp.msg;
                 setTimeout(() => {
                   this.$emit("loginOption");
                 }, 5000);
-              });
-            } else {
-              resp
-                .json()
-                .then((rep) =>
-                  this.errors.push({ key: this.randomKey(), msg: rep })
-                );
+            } else { 
+                this.errors.push({ key: this.randomKey(), msg: resp.msg })
+                
             }
           })
           .catch((error) => {

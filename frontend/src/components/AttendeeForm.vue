@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h2>{{editMode ? 'Edit attendee' : 'Add attendee'}}</h2>
+    <h2>{{ editMode ? "Edit attendee" : "Add attendee" }}</h2>
     <label for="attendeeNameInput">Name of the attendee</label>
     <input v-model="attendeeName" type="text" id="attendeeNameInput" />
     <label for="attendeeAgeInput">Age of the attendee</label>
-    <input v-model="attendeeAge" type="text" id="attendeeAgeInput" />
-    <button v-on:click="submitForm">{{editMode ? 'EDIT' : 'INVITE'}}</button>
+    <input v-model="attendeeAge" type="number" id="attendeeAgeInput" />
+    <button v-on:click="submitForm">{{ editMode ? "EDIT" : "INVITE" }}</button>
   </div>
 </template>
 
@@ -25,8 +25,11 @@ export default {
   created() {},
   watch: {
     attendeeToEdit: function(currentAttendeeToEdit) {
-      this.attendeeName = currentAttendeeToEdit.fullName;
-      this.attendeeAge = currentAttendeeToEdit.age;
+      console.log(currentAttendeeToEdit);
+      if (currentAttendeeToEdit) {
+        this.attendeeName = currentAttendeeToEdit.fullname;
+        this.attendeeAge = currentAttendeeToEdit.age;
+      }
     }
   },
   methods: {
@@ -38,7 +41,7 @@ export default {
       */
       this.$emit(this.editMode ? "editAttendee" : "inviteAttendee", {
         id: this.attendeeToEdit ? this.attendeeToEdit.id : undefined,
-        fullName: this.attendeeName,
+        fullname: this.attendeeName,
         age: this.attendeeAge
       });
       this.attendeeName = null;

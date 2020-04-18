@@ -1,62 +1,52 @@
 /**
  * HTTP request calls to the backend server
  */
+import axios from 'axios';
 const SERVER_URL = 'http://localhost:3001';
 
+axios.defaults.withCredentials = true;
+
+function getCurrentUser () {
+  return axios.get(`${SERVER_URL}/current_user`).then(resp => {
+    return resp.data;
+  });
+}
+function logOut () {
+  return axios.get(`${SERVER_URL}/logout`);
+}
 function login (object) {
-  return fetch(`${SERVER_URL}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(object)
+  return axios.post(`${SERVER_URL}/login`, {
+    username: object.username,
+    password: object.password
   });
 }
 function siginUp (user) {
-  return fetch(`${SERVER_URL}/sigin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(user)
+  return axios.post(`${SERVER_URL}/sigin`, {
+    username: user.username,
+    password: user.password
   });
 }
 
 function getAttendees () {
-  return fetch(`${SERVER_URL}/attendees`)
-    .then(resp => {
-      return resp.json();
-    })
-    .then(data => {
-      console.log(data);
-      return data;
-    });
+  return axios.get(`${SERVER_URL}/attendees`).then(resp => {
+    return resp.data;
+  });
 }
 
 function inviteAttendee (attendee) {
-  return fetch(`${SERVER_URL}/attendees`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(attendee)
+  return axios.post(`${SERVER_URL}/attendees`, {
+    fullname: attendee.fullname, age: attendee.age
   });
 }
 
 function editAttendee (attendeeId, attendee) {
-  return fetch(`${SERVER_URL}/attendees/${attendeeId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ ...attendee })
+  return axios.put(`${SERVER_URL}/attendees/${attendeeId}`, {
+    fullname: attendee.fullname, age: attendee.age
   });
 }
 
 function deleteAttendee (attendeeId) {
-  return fetch(`${SERVER_URL}/attendees/${attendeeId}`, {
-    method: 'DELETE'
-  });
+  return axios.delete(`${SERVER_URL}/attendees/${attendeeId}`);
 }
 
-export { getAttendees, inviteAttendee, deleteAttendee, editAttendee, login, siginUp };
+export { getAttendees, inviteAttendee, deleteAttendee, editAttendee, login, siginUp, getCurrentUser, logOut };

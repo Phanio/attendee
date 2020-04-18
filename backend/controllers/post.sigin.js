@@ -10,7 +10,7 @@ async function postSigin (req, res) {
     return;
   }
   // on vérifie l'username et le mot de passe de l'utilisateur
-  let user = await User.getByUsername(req.body.username, ['id', 'username']);
+  let user = await User.getByUsername(req.body.username);
 
   // si on a trouvé un utilisateur correspondant, alors on sauvegarde son ID
   // dans l'objet req.session

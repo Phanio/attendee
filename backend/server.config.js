@@ -10,5 +10,6 @@ module.exports = {
     password: 'pgpass',
     port: 5432,
     user: 'postgres'
-  }
+  },
+  URL_FRONTEND: 'http://localhost:8080'
 };

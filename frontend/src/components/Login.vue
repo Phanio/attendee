@@ -8,7 +8,7 @@
     <button v-on:click="submitForm">Go!</button>
     <br />
     <div style="text-align:right">
-      <a  href="#" v-on:click="siginUp">Sigin Up</a>
+      <a href="#" v-on:click="siginUp">Sigin Up</a>
     </div>
   </div>
 </template>
@@ -43,19 +43,13 @@ export default {
       if (this.checkForm()) {
         login({ username: this.username, password: this.password })
           .then((resp) => {
+            console.log(resp);
             if (resp.status === 200) {
-              //  if (response.status === 200 && 'token' in response.body) {
-              this.$session.start();
-              // Vue.http.headers.common['Authorization'] = 'Bearer ' + response.body.token
-              // this.$router.push('/user_space')
-
-              resp.json().then((user) => {
-                this.$session.set("sessionId", user);
-                this.$emit("connected", user);
-              });
+              const user = resp.data;
+              this.$emit("connected", user);
             } else {
               this.password = "";
-              resp.json().then((rep) => (this.errormsg = rep.msg));
+              this.errormsg = resp.msg;
             }
           })
           .catch((error) => {
@@ -64,7 +58,7 @@ export default {
       }
     },
     siginUp() {
-     this.$emit('siginOption');
+      this.$emit("siginOption");
     },
   },
 };
@@ -79,7 +73,7 @@ input {
 }
 .login-block {
   max-width: 400px;
-  margin: auto; 
+  margin: auto;
   padding: 10px;
   background-color: silver;
   border-radius: 30px;

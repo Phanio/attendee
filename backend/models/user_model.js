@@ -38,10 +38,9 @@ class User {
    * @param {String[]} scope
    * @returns {Promise<User>}
    */
-  static async getByUsername (username, scope) {
-   const fields = scope.join(', ')
+  static async getByUsername (username) { 
     const result = await PostgresStore.client.query({
-      text: `SELECT ${fields} FROM ${User.tableName} WHERE username=$1`,
+      text: `SELECT  * FROM ${User.tableName} WHERE username=$1`,
       values: [username]
     })
     return result.rows[0]
@@ -52,10 +51,9 @@ class User {
    * @param {String[]} scope
    * @returns {Promise<User>}
    */
-  static async getById (id, scope) {
-    const fields = scope.join(', ')
+  static async getById (id) {
     const result = await PostgresStore.client.query({
-      text: `SELECT ${fields} FROM ${User.tableName} WHERE id=$1`,
+      text: `SELECT * FROM ${User.tableName} WHERE id=$1`,
       values: [id]
     })
     return result.rows[0]

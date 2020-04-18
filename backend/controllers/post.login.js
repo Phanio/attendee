@@ -20,6 +20,7 @@ async function postLogin (req, res) {
   // dans l'objet req.session
   if (user) {
     req.session.userId = user.id;
+    console.log(req.session.userId);
     res.json(user);
     return;
   }

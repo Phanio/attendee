@@ -46,7 +46,7 @@ class PostgresStore {
       name: 'attendees',
       query: `CREATE TABLE attendees (
         id SERIAL PRIMARY KEY, 
-        name TEXT  NOT NULL,
+        fullname TEXT  NOT NULL,
         age INTEGER NOT NULL,
         user_id INTEGER REFERENCES users(id)
       )`
