@@ -7,6 +7,12 @@ Expose REST services around an attendee entity
 ```
 npm install
 ```
+## Created data base and change the name in the config file 
+
+##  Init data base
+```
+npm reset
+```
 
 ### Run the server
 
